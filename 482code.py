@@ -1,17 +1,32 @@
 
 import math
 import pandas as pd
+import numpy as np
+import streamlit as st
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 from scipy.optimize import fsolve
 
-# ATTETION !!!
-# Colum name format should be HE XXX B or IPE XXX
+#%%
+
+st.title(" Steel Section Calculator")
+st.markdown("""this app is simply performing the calcutaions for designing columns, beams and secondary beams.""")
+st.sidebar.header("You can enter the data from here")
+df = pd.read_excel(r'C:\Users\ASUSNB\Desktop\code482\data.xlsx',index_col=None)
+df2 = df.copy()
+st.dataframe(df2)
+st.sidebar.selectbox("select a section",options=df2["Section Name"])
+
+#%%
+"""
 
 ### INPUTS AREA
-column_name = 'HE 300 B'
+column_name = 'HE 280 B'
 N_applied = 600 #kN
-E = 200_000 #Mpa
+E = 210_000 #Mpa
 Fy = 235 #MPa
-L = 3600 #mm
+L = 3500 #mm
 K = 1
 Kz = 1
 ### END OF THE INPUTS AREA
@@ -53,8 +68,7 @@ else:
 
 print(f'Flange λ is equal to {bf/(2*tf):.2f}\nFlange λR value is equal to {flange_localb_limit:.2f}\nFlange is {flange}\n\nWeb λ is equal to {d/tf:.2f}\nFlange λR value is equal to {web_localb_limit:.2f}\nWeb is {web}')
 
-print('')
-#Flexural Buckling
+# Flexural Buckling
 
 delta = K*L/rx
 Fe= (math.pi**2*E)/(delta**2)
@@ -96,14 +110,14 @@ else:
     print(f'FS: {column_capacity/N_applied:.2f}')
     print(f'column: {100*N_applied/column_capacity:.2f} %')
 
-"""# Composite Beam Calculations"""
+# Composite Beam Calculations
 
 ### INPUTS AREA
-column_name = 'IPE 270'
+column_name = 'IPE 360'
 N_applied = 600 #kN
-E = 200_000 #Mpa
+E = 210_000 #Mpa
 Fy = 235 #MPa
-L_beam = 4000 #mm
+L_beam = 3000 #mm
 b1 = 6000 #mm
 b2 = 4000 #mm
 fc = 25 #MPa
@@ -135,16 +149,8 @@ if C>T:
 else:
   print(f'Compresive: {C} kN, tension: {T} kN\n')
 
-#54
+# Beams
 
-"""# Beams"""
-
-import math
-import pandas as pd
-
-
-# ATTETION !!!
-# Colum name format should be HE XXX B or IPE XXX
 ### INPUTS AREA
 beam_name = 'IPE 300'
 M_applied = 147.7075 #kN.m
@@ -199,7 +205,6 @@ if (web == 'compact') and (flange == 'compact'):
 else:
     print(f'\n{beam_name} is non-compact')
 
-print('')
 
 Lp = 1.76 * ry * (E/Fy)**0.5 
 
@@ -257,4 +262,5 @@ if M_capacity >= M_applied:
 else:
     print(f'{beam_name} is NOT OK')
     print(f'FS: {M_capacity/M_applied:.2f}')
-
+    
+"""
